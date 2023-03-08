@@ -46,8 +46,8 @@ mca.end = 1250
 lia.start = 1650
 lia.end = 1850
 
-ant.start = 536
-ant.end = 660
+lalia.start = 536
+lalia.end = 660
 
 # Restrict to records that have data extending to at least 536 CE.
 #   This threshold could be adjusted based on the desired calibration window.
@@ -331,5 +331,83 @@ ggplot() +
         panel.grid.major = element_blank())
 #
 
+###############################################################################
+#### Plot individual region definitions ####
+ggplot() +
+  geom_polygon(data = wrld_simpl, aes(x = long, y = lat, group = group), 
+               fill = "grey", colour = "black", alpha = 0.2) +
+  geom_rect(aes(xmin = -90, xmax = -15, ymin = 60, ymax = 85), color = "red", fill = NA, lwd = 1.5)  +
+  geom_rect(aes(xmin = -15, xmax = 55, ymin = 48, ymax = 85), color = "red", fill = NA, lwd = 1.5)  +
+  geom_rect(aes(xmin = -15, xmax = 55, ymin = 20, ymax = 48), color = "red", fill = NA, lwd = 1.5)  +
+  
+  # Removes Axes and labels
+  scale_x_continuous(breaks = NULL) +
+  xlab("") + 
+  ylab("") +
+  # Change theme to remove axes and ticks
+  theme(panel.background = element_blank(),
+        axis.ticks=element_blank(),
+        panel.border = element_blank(),
+        panel.grid.major = element_blank())
 
-# Regional boxplots of regional mean values
+  
+#### Regional boxplots of regional mean values ####
+# Define individual regions:
+# Greenland
+lon_min = -90
+lon_max = -15
+lat_min = 60
+lat_max = 85
+
+# Filter Greenland records
+mcaRecs_green = mcaRecs[which((mcaRecs$lat > lat_min) & (mcaRecs$lat < lat_max) & (mcaRecs$lon > lon_min) & (mcaRecs$lon < lon_max)),]
+liaRecs_green = liaRecs[which((liaRecs$lat > lat_min) & (liaRecs$lat < lat_max) & (liaRecs$lon > lon_min) & (liaRecs$lon < lon_max)),]
+
+# Europe
+lon_min = -15
+lon_max = 55
+lat_min = 20
+lat_max = 85
+
+# Filter for Europe records
+mcaRecs_EU = mcaRecs[which((mcaRecs$lat > lat_min) & (mcaRecs$lat < lat_max) & (mcaRecs$lon > lon_min) & (mcaRecs$lon < lon_max)),]
+liaRecs_EU = liaRecs[which((liaRecs$lat > lat_min) & (liaRecs$lat < lat_max) & (liaRecs$lon > lon_min) & (liaRecs$lon < lon_max)),]
+
+
+# Create boxplots
+box.list = list("Grn MCA" = mcaRecs_green$mean_zscore, "Grn LIA" = liaRecs_green$mean_zscore,
+             "EU MCA" = mcaRecs_EU$mean_zscore, "EU LIA" = liaRecs_EU$mean_zscore)
+boxplot(box.list)
+
+
+#### Break up into northern and southern Europe ####
+# N. EU
+lon_min = -15
+lon_max = 55
+lat_min = 48
+lat_max = 85
+
+mcaRecs_NEU = mcaRecs[which((mcaRecs$lat > lat_min) & (mcaRecs$lat < lat_max) & (mcaRecs$lon > lon_min) & (mcaRecs$lon < lon_max)),]
+liaRecs_NEU = liaRecs[which((liaRecs$lat > lat_min) & (liaRecs$lat < lat_max) & (liaRecs$lon > lon_min) & (liaRecs$lon < lon_max)),]
+
+# S. EU
+lon_min = -15
+lon_max = 55
+lat_min = 20
+lat_max = 48
+
+mcaRecs_SEU = mcaRecs[which((mcaRecs$lat > lat_min) & (mcaRecs$lat < lat_max) & (mcaRecs$lon > lon_min) & (mcaRecs$lon < lon_max)),]
+liaRecs_SEU = liaRecs[which((liaRecs$lat > lat_min) & (liaRecs$lat < lat_max) & (liaRecs$lon > lon_min) & (liaRecs$lon < lon_max)),]
+
+# Create boxplots
+box.list = list("Grn MCA" = mcaRecs_green$mean_zscore, "Grn LIA" = liaRecs_green$mean_zscore,
+                "N.EU MCA" = mcaRecs_NEU$mean_zscore, "N.EU LIA" = liaRecs_NEU$mean_zscore,
+                "S.EU MCA" = mcaRecs_SEU$mean_zscore, "S.EU LIA" = liaRecs_SEU$mean_zscore)
+boxplot(box.list)
+
+stripchart(box.list,
+           method = "jitter", 
+           col = c("black"), 
+           pch = 16,
+           vertical = T,
+           add = T)
