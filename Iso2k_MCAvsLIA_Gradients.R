@@ -362,6 +362,8 @@ lat_max = 85
 # Filter Greenland records
 mcaRecs_green = mcaRecs[which((mcaRecs$lat > lat_min) & (mcaRecs$lat < lat_max) & (mcaRecs$lon > lon_min) & (mcaRecs$lon < lon_max)),]
 liaRecs_green = liaRecs[which((liaRecs$lat > lat_min) & (liaRecs$lat < lat_max) & (liaRecs$lon > lon_min) & (liaRecs$lon < lon_max)),]
+laliaRecs_green = laliaRecs[which((liaRecs$lat > lat_min) & (laliaRecs$lat < lat_max) & (laliaRecs$lon > lon_min) & (laliaRecs$lon < lon_max)),]
+
 
 # Europe
 lon_min = -15
@@ -372,6 +374,7 @@ lat_max = 85
 # Filter for Europe records
 mcaRecs_EU = mcaRecs[which((mcaRecs$lat > lat_min) & (mcaRecs$lat < lat_max) & (mcaRecs$lon > lon_min) & (mcaRecs$lon < lon_max)),]
 liaRecs_EU = liaRecs[which((liaRecs$lat > lat_min) & (liaRecs$lat < lat_max) & (liaRecs$lon > lon_min) & (liaRecs$lon < lon_max)),]
+laliaRecs_EU = laliaRecs[which((laliaRecs$lat > lat_min) & (laliaRecs$lat < lat_max) & (laliaRecs$lon > lon_min) & (laliaRecs$lon < lon_max)),]
 
 
 # Create boxplots
@@ -389,6 +392,7 @@ lat_max = 85
 
 mcaRecs_NEU = mcaRecs[which((mcaRecs$lat > lat_min) & (mcaRecs$lat < lat_max) & (mcaRecs$lon > lon_min) & (mcaRecs$lon < lon_max)),]
 liaRecs_NEU = liaRecs[which((liaRecs$lat > lat_min) & (liaRecs$lat < lat_max) & (liaRecs$lon > lon_min) & (liaRecs$lon < lon_max)),]
+laliaRecs_NEU = laliaRecs[which((laliaRecs$lat > lat_min) & (laliaRecs$lat < lat_max) & (laliaRecs$lon > lon_min) & (laliaRecs$lon < lon_max)),]
 
 # S. EU
 lon_min = -15
@@ -398,11 +402,25 @@ lat_max = 48
 
 mcaRecs_SEU = mcaRecs[which((mcaRecs$lat > lat_min) & (mcaRecs$lat < lat_max) & (mcaRecs$lon > lon_min) & (mcaRecs$lon < lon_max)),]
 liaRecs_SEU = liaRecs[which((liaRecs$lat > lat_min) & (liaRecs$lat < lat_max) & (liaRecs$lon > lon_min) & (liaRecs$lon < lon_max)),]
+laliaRecs_SEU = laliaRecs[which((laliaRecs$lat > lat_min) & (laliaRecs$lat < lat_max) & (laliaRecs$lon > lon_min) & (laliaRecs$lon < lon_max)),]
 
-# Create boxplots
+# Create boxplots for MCA and LIA
 box.list = list("Grn MCA" = mcaRecs_green$mean_zscore, "Grn LIA" = liaRecs_green$mean_zscore,
                 "N.EU MCA" = mcaRecs_NEU$mean_zscore, "N.EU LIA" = liaRecs_NEU$mean_zscore,
                 "S.EU MCA" = mcaRecs_SEU$mean_zscore, "S.EU LIA" = liaRecs_SEU$mean_zscore)
+boxplot(box.list)
+
+stripchart(box.list,
+           method = "jitter", 
+           col = c("black"), 
+           pch = 16,
+           vertical = T,
+           add = T)
+
+# Create boxplots for MCA, LIA, and LALIA
+box.list = list("Grn MCA" = mcaRecs_green$mean_zscore, "Grn LIA" = liaRecs_green$mean_zscore,"Grn LALIA" = laliaRecs_green$mean_zscore,
+                "N.EU MCA" = mcaRecs_NEU$mean_zscore, "N.EU LIA" = liaRecs_NEU$mean_zscore,"N.EU LALIA" = laliaRecs_NEU$mean_zscore,
+                "S.EU MCA" = mcaRecs_SEU$mean_zscore, "S.EU LIA" = liaRecs_SEU$mean_zscore, "S.EU LALIA" = laliaRecs_SEU$mean_zscore)
 boxplot(box.list)
 
 stripchart(box.list,
